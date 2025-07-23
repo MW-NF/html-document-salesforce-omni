@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infographic: A Leader's Guide to Salesforce Omni-Channel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Brilliant Blues -->
+    <!-- Application Structure Plan: A top-to-bottom narrative infographic designed for a business leader. It starts with a high-impact hero section stating the core value. It then flows into "The ROI" using large stats, followed by a clear explanation of "The Three Pillars" using icons. The core of the infographic presents two "Key Decision" sections with comparative charts (Bar and Donut) to visualize trade-offs. A custom HTML/CSS flowchart then illustrates the process, followed by card-based "Scenarios" and a final "Roadmap" checklist. This linear, story-driven structure is chosen to guide a non-technical user from the 'why' to the 'how' in a visually engaging and easily digestible format, perfect for a single-page scroll. -->
+    <!-- Visualization & Content Choices: 
+        - Data Point: Business Benefits (CSAT, Productivity). Goal: Inform. Viz: Large numbers with Unicode icons. Justification: High-impact, quick communication of value. Method: HTML/Tailwind.
+        - Data Point: Queue vs. Skills Routing. Goal: Compare. Viz: Horizontal Bar Chart. Justification: Best way to visually compare the trade-off between 'Effort' and 'Precision' for the two strategies. Library: Chart.js.
+        - Data Point: Tab vs. Status Capacity. Goal: Compare. Viz: Donut Chart. Justification: Ideal for showing the part-to-whole relationship of 'Workload Accuracy', making the abstract concept tangible. Library: Chart.js.
+        - Data Point: Omni-Channel Process. Goal: Organize. Viz: HTML/CSS Flowchart. Justification: Visually simplifies the routing process without using prohibited SVG/Mermaid. Method: HTML/CSS/Tailwind.
+        - Data Point: Scenarios. Goal: Inform. Viz: Styled cards. Justification: Breaks down case studies into scannable, easy-to-understand snippets. Method: HTML/Tailwind.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F5FF; /* Lightest Blue */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .flowchart-step {
+            border-color: #1E40AF; /* Dark Blue */
+            color: #1E3A8A; /* Darker Blue Text */
+        }
+        .flowchart-arrow {
+            color: #3B82F6; /* Medium Blue */
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="max-w-5xl mx-auto bg-white shadow-2xl rounded-lg my-8">
+        
+        <header class="bg-gradient-to-br from-blue-700 to-blue-500 text-white text-center p-10 rounded-t-lg">
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight">The Air Traffic Control for Your Customer Service</h1>
+            <p class="mt-4 text-lg md:text-xl text-blue-100 max-w-3xl mx-auto">A Business Leader's Visual Guide to Salesforce Omni-Channel</p>
+        </header>
+
+        <main class="p-6 md:p-10 space-y-16">
+
+            <section id="roi">
+                <h2 class="text-3xl font-bold text-center text-blue-900">The ROI of Intelligent Routing</h2>
+                <p class="text-center mt-2 text-gray-600">This is more than a tool; it's a strategic investment in efficiency and experience.</p>
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                        <span class="text-5xl text-blue-600">▲</span>
+                        <h3 class="text-2xl font-bold text-blue-900 mt-2">Boost Productivity</h3>
+                        <p class="text-gray-600 mt-1">Eliminate "cherry-picking" and agent think-time by automatically pushing the right work to the right person.</p>
+                    </div>
+                    <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                        <span class="text-5xl text-blue-600">♥</span>
+                        <h3 class="text-2xl font-bold text-blue-900 mt-2">Improve CSAT</h3>
+                        <p class="text-gray-600 mt-1">Increase First Contact Resolution by matching customers with the best-skilled agent, the first time.</p>
+                    </div>
+                    <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                        <span class="text-5xl text-blue-600">⚖</span>
+                        <h3 class="text-2xl font-bold text-blue-900 mt-2">Balance Workload</h3>
+                        <p class="text-gray-600 mt-1">Prevent agent burnout by fairly distributing tasks based on actual capacity, not just availability.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="pillars">
+                <h2 class="text-3xl font-bold text-center text-blue-900">The Three Pillars of Omni-Channel</h2>
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="text-center p-4">
+                        <div class="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto text-3xl font-bold">1</div>
+                        <h3 class="text-xl font-bold mt-4 text-blue-800">Presence</h3>
+                        <p class="mt-2 text-gray-600">The "On/Off" switch. Agents signal their availability (e.g., `Available - Chat`, `In Training`) to control the flow of work.</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <div class="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto text-3xl font-bold">2</div>
+                        <h3 class="text-xl font-bold mt-4 text-blue-800">Capacity</h3>
+                        <p class="mt-2 text-gray-600">The workload limit. Defines how many tasks an agent can handle at once to prevent overload and protect quality.</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <div class="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto text-3xl font-bold">3</div>
+                        <h3 class="text-xl font-bold mt-4 text-blue-800">Routing</h3>
+                        <p class="mt-2 text-gray-600">The engine. The rules that direct work based on priority, agent skills, and availability to find the perfect match.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="decision-routing">
+                <h2 class="text-3xl font-bold text-center text-blue-900">Key Decision: Routing Strategy</h2>
+                <p class="text-center mt-2 text-gray-600">Choose the right model based on your primary business goal: speed or precision.</p>
+                <div class="mt-8 bg-gray-50 p-6 rounded-lg">
+                    <div class="chart-container">
+                        <canvas id="routingChart"></canvas>
+                    </div>
+                    <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+                        <div>
+                            <h4 class="font-bold text-blue-700">Queue-Based (Simple & Fast)</h4>
+                            <p class="text-gray-600">Routes to the next available agent in a team. Best for generalist teams where speed is the top priority.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-blue-700">Skills-Based (Precise & Effective)</h4>
+                            <p class="text-gray-600">Matches work to agents with specific, verified skills. Best for specialized teams to maximize expertise.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="decision-capacity">
+                <h2 class="text-3xl font-bold text-center text-blue-900">Key Decision: Capacity Model</h2>
+                <p class="text-center mt-2 text-gray-600">This choice is critical for accurate workload data. Use the right model for the right type of work.</p>
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <h3 class="text-xl font-bold text-center text-blue-800">Tab-Based Capacity</h3>
+                        <p class="text-center text-sm text-gray-500 mb-4">Best for real-time work like Chat</p>
+                        <div class="chart-container h-48 md:h-56">
+                            <canvas id="tabCapacityChart"></canvas>
+                        </div>
+                        <p class="mt-4 text-sm text-gray-600"><strong>How it works:</strong> Capacity is consumed only when the work tab is open. Closing the tab releases capacity, even if the work isn't done. <strong class="text-red-600">Risk: Creates hidden backlogs.</strong></p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <h3 class="text-xl font-bold text-center text-blue-800">Status-Based Capacity</h3>
+                        <p class="text-center text-sm text-gray-500 mb-4">Best for long-running work like Cases</p>
+                        <div class="chart-container h-48 md:h-56">
+                            <canvas id="statusCapacityChart"></canvas>
+                        </div>
+                         <p class="mt-4 text-sm text-gray-600"><strong>How it works:</strong> Capacity is tied to the work's actual status (e.g., 'In Progress'). Capacity is released when status is 'Waiting on Customer'. <strong class="text-green-600">Benefit: Highly accurate data.</strong></p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="flowchart">
+                <h2 class="text-3xl font-bold text-center text-blue-900">How It All Works Together</h2>
+                <p class="text-center mt-2 text-gray-600">A simplified view of how a work item travels through the Omni-Channel system.</p>
+                <div class="mt-8 flex flex-col items-center space-y-4">
+                    <div class="flowchart-step w-full md:w-3/4 p-4 border-2 rounded-lg text-center font-semibold">1. Work Item Arrives (Case, Chat, etc.)</div>
+                    <div class="flowchart-arrow text-4xl font-light">↓</div>
+                    <div class="flowchart-step w-full md:w-3/4 p-4 border-2 rounded-lg text-center font-semibold">2. System Checks Priority & Required Skills</div>
+                    <div class="flowchart-arrow text-4xl font-light">↓</div>
+                    <div class="flowchart-step w-full md:w-3/4 p-4 border-2 rounded-lg text-center font-semibold">3. Finds Agents who are <span class="text-green-600">Available</span> + have matching <span class="text-blue-600">Skills</span></div>
+                    <div class="flowchart-arrow text-4xl font-light">↓</div>
+                    <div class="flowchart-step w-full md:w-3/4 p-4 border-2 rounded-lg text-center font-semibold">4. System Checks Agents' Remaining <span class="text-purple-600">Capacity</span></div>
+                    <div class="flowchart-arrow text-4xl font-light">↓</div>
+                    <div class="bg-green-100 text-green-800 border-2 border-green-500 w-full md:w-3/4 p-4 rounded-lg text-center font-bold">5. Pushes Work to the Best-Fit Agent!</div>
+                </div>
+            </section>
+
+            <section id="scenarios">
+                <h2 class="text-3xl font-bold text-center text-blue-900">Configurations in Action</h2>
+                <p class="text-center mt-2 text-gray-600">See how different setups solve real business challenges.</p>
+                <div class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="border bg-white rounded-lg p-6 shadow-sm">
+                        <h4 class="font-bold text-lg text-blue-800">High-Volume Retailer</h4>
+                        <p class="text-sm text-gray-500 mt-1">Challenge: Urgent chats get stuck behind emails.</p>
+                        <ul class="mt-4 text-sm space-y-2">
+                            <li class="flex items-start"><span class="text-blue-600 font-bold mr-2">✓</span> <span>Use **Priority Routing** to handle chats first.</span></li>
+                            <li class="flex items-start"><span class="text-blue-600 font-bold mr-2">✓</span> <span>Make emails **Interruptible** to free up agents for chats.</span></li>
+                        </ul>
+                    </div>
+                    <div class="border bg-white rounded-lg p-6 shadow-sm">
+                        <h4 class="font-bold text-lg text-blue-800">Specialized Tech Team</h4>
+                        <p class="text-sm text-gray-500 mt-1">Challenge: Complex cases go to junior agents.</p>
+                        <ul class="mt-4 text-sm space-y-2">
+                            <li class="flex items-start"><span class="text-blue-600 font-bold mr-2">✓</span> <span>Implement **Skills-Based Routing** for precision.</span></li>
+                            <li class="flex items-start"><span class="text-blue-600 font-bold mr-2">✓</span> <span>Use **Status-Based Capacity** for long, complex cases.</span></li>
+                        </ul>
+                    </div>
+                    <div class="border bg-white rounded-lg p-6 shadow-sm">
+                        <h4 class="font-bold text-lg text-blue-800">B2B Account Team</h4>
+                        <p class="text-sm text-gray-500 mt-1">Challenge: AMs miss calls while doing case work.</p>
+                        <ul class="mt-4 text-sm space-y-2">
+                            <li class="flex items-start"><span class="text-blue-600 font-bold mr-2">✓</span> <span>Use **Direct-to-Agent** routing for key client calls.</span></li>
+                            <li class="flex items-start"><span class="text-blue-600 font-bold mr-2">✓</span> <span>**Status-Based Capacity** frees AMs when cases are paused.</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+        
+        <footer class="bg-blue-900 text-white text-center p-8 rounded-b-lg">
+            <h2 class="text-2xl font-bold">Ready to Build Your Strategy?</h2>
+            <p class="mt-2 text-blue-200">Use these decisions as the blueprint for your technical team.</p>
+        </footer>
+
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const brilliantBlues = {
+        dark: '#1E40AF',
+        medium: '#3B82F6',
+        light: '#93C5FD',
+        background: '#DBEAFE',
+        accent: '#FBBF24'
+    };
+    
+    const wrapLabel = (label) => {
+        const maxLength = 16;
+        if (typeof label !== 'string' || label.length <= maxLength) {
+            return label;
+        }
+        const words = label.split(' ');
+        const lines = [];
+        let currentLine = '';
+        for (const word of words) {
+            if ((currentLine + word).length > maxLength) {
+                lines.push(currentLine.trim());
+                currentLine = '';
+            }
+            currentLine += word + ' ';
+        }
+        lines.push(currentLine.trim());
+        return lines;
+    };
+    
+    const tooltipTitleCallback = (tooltipItems) => {
+        const item = tooltipItems[0];
+        let label = item.chart.data.labels[item.dataIndex];
+        if (Array.isArray(label)) {
+          return label.join(' ');
+        }
+        return label;
+    };
+
+    const routingCtx = document.getElementById('routingChart').getContext('2d');
+    new Chart(routingCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Queue-Based Routing', 'Skills-Based Routing'],
+            datasets: [{
+                label: 'Implementation Effort',
+                data: [3, 8],
+                backgroundColor: brilliantBlues.light,
+                borderColor: brilliantBlues.medium,
+                borderWidth: 2
+            }, {
+                label: 'Routing Precision',
+                data: [5, 9],
+                backgroundColor: brilliantBlues.medium,
+                borderColor: brilliantBlues.dark,
+                borderWidth: 2
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    max: 10,
+                    title: { display: true, text: 'Rating (out of 10)' }
+                },
+                y: {
+                    ticks: {
+                        callback: function(value) {
+                            const label = this.getLabelForValue(value);
+                            return wrapLabel(label);
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: { position: 'bottom' },
+                title: { display: true, text: 'Trade-off: Effort vs. Precision', font: { size: 16 } },
+                tooltip: { callbacks: { title: tooltipTitleCallback } }
+            }
+        }
+    });
+
+    const tabCapacityCtx = document.getElementById('tabCapacityChart').getContext('2d');
+    new Chart(tabCapacityCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Accurate Data', 'Hidden Backlog Risk'],
+            datasets: [{
+                data: [40, 60],
+                backgroundColor: [brilliantBlues.medium, '#F87171'], // Medium Blue, Red for risk
+                borderColor: '#ffffff',
+                borderWidth: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                title: { display: true, text: 'Workload Accuracy', font: { size: 14 } },
+                tooltip: { callbacks: { title: tooltipTitleCallback } }
+            }
+        }
+    });
+
+    const statusCapacityCtx = document.getElementById('statusCapacityChart').getContext('2d');
+    new Chart(statusCapacityCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Accurate Data', 'Hidden Backlog Risk'],
+            datasets: [{
+                data: [95, 5],
+                backgroundColor: [brilliantBlues.medium, '#F87171'],
+                borderColor: '#ffffff',
+                borderWidth: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                title: { display: true, text: 'Workload Accuracy', font: { size: 14 } },
+                tooltip: { callbacks: { title: tooltipTitleCallback } }
+            }
+        }
+    });
+});
+</script>
+
+</body>
+</html>

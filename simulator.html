@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Omni-Channel Workload & Capacity Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Brilliant Blues -->
+    <!-- Application Structure Plan: A self-contained, interactive tool designed to clarify a single, complex concept: Omni-Channel capacity and priority. The structure is simple: a configuration panel on the left and a dynamic results panel on the right (stacking on mobile). The user can adjust an agent's total capacity and then configure three distinct work channels (Voice, Chat, Case) by setting their individual workload, priority, and interruptibility. The results panel instantly updates to show possible work combinations and explains the impact of the settings in plain language. This interactive, cause-and-effect structure is chosen to provide a hands-on learning experience, allowing a business leader to "play" with the concepts and build intuitive understanding. -->
+    <!-- Visualization & Content Choices:
+        - Data Point: Agent's Total Capacity. Goal: Inform/Control. Viz: Slider input. Justification: Tactile and intuitive way to set a range-bound value. Method: HTML/JS.
+        - Data Point: Channel Configuration (Workload, Priority, Interruptible). Goal: Organize/Control. Viz: Styled input cards for each channel. Justification: Groups related settings logically and cleanly. Method: HTML/Tailwind/JS.
+        - Data Point: Possible Work Combinations. Goal: Compare/Inform. Viz: Dynamic text output. Justification: Clearly lists the outcomes of the user's settings (e.g., "1 Voice Call OR 3 Cases"). Direct and easy to understand. Method: JS DOM manipulation.
+        - Data Point: Interruptibility Impact. Goal: Explain. Viz: Conditional text block. Justification: Highlights the most complex concept (interruptibility) with a specific, context-sensitive explanation. Method: JS DOM manipulation.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F5FF;
+        }
+        .config-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: all 0.2s ease-in-out;
+        }
+        .config-card.disabled {
+            background-color: #f3f4f6;
+            opacity: 0.7;
+        }
+        .results-card {
+            background: linear-gradient(135deg, #1E40AF, #3B82F6);
+            color: white;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #1E40AF;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #1E40AF;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-blue-900">Omni-Channel Workload & Capacity Simulator</h1>
+            <p class="mt-2 text-lg text-gray-600 max-w-3xl mx-auto">Experiment with capacity and priority to see how they impact your agent's workload in real-time.</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Configuration Panel -->
+            <div class="space-y-6">
+                <div class="config-card p-6">
+                    <label for="totalCapacity" class="block text-xl font-bold text-blue-900">1. Set Agent's Total Workload</label>
+                    <p class="text-sm text-gray-500 mb-4">This is the total "size" of work an agent can handle at one time.</p>
+                    <div class="flex items-center space-x-4">
+                        <input type="range" id="totalCapacity" min="1" max="20" value="10" class="w-full h-2 bg-blue-100 rounded-lg appearance-none cursor-pointer">
+                        <span id="totalCapacityValue" class="text-2xl font-bold text-blue-800 w-12 text-center">10</span>
+                    </div>
+                </div>
+
+                <div class="p-4 border-t border-b border-gray-200">
+                     <h2 class="text-xl font-bold text-blue-900">2. Configure Service Channels</h2>
+                     <p class="text-sm text-gray-500">Enable channels and define their workload, priority, and behavior.</p>
+                </div>
+
+                <!-- Channel Cards -->
+                <div id="voice-channel" class="config-card p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-blue-800">Voice Call</h3>
+                        <div class="flex items-center">
+                            <label for="voice-enable" class="text-sm font-medium text-gray-700 mr-2">Enable</label>
+                            <input type="checkbox" id="voice-enable" class="channel-toggle h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500" checked>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label for="voice-workload" class="block text-sm font-medium text-gray-700">Workload</label>
+                            <input type="number" id="voice-workload" value="10" min="1" max="20" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="voice-priority" class="block text-sm font-medium text-gray-700">Priority</label>
+                            <input type="number" id="voice-priority" value="1" min="1" max="10" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        </div>
+                        <div class="flex items-end pb-1">
+                             <div class="flex items-center">
+                                <input id="voice-interruptible" type="checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                <label for="voice-interruptible" class="ml-2 block text-sm text-gray-900">Interruptible</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="chat-channel" class="config-card p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-blue-800">Live Chat / SMS</h3>
+                        <div class="flex items-center">
+                            <label for="chat-enable" class="text-sm font-medium text-gray-700 mr-2">Enable</label>
+                            <input type="checkbox" id="chat-enable" class="channel-toggle h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500" checked>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label for="chat-workload" class="block text-sm font-medium text-gray-700">Workload</label>
+                            <input type="number" id="chat-workload" value="5" min="1" max="20" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="chat-priority" class="block text-sm font-medium text-gray-700">Priority</label>
+                            <input type="number" id="chat-priority" value="2" min="1" max="10" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        </div>
+                        <div class="flex items-end pb-1">
+                             <div class="flex items-center">
+                                <input id="chat-interruptible" type="checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                <label for="chat-interruptible" class="ml-2 block text-sm text-gray-900">Interruptible</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="case-channel" class="config-card p-6">
+                     <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-blue-800">Case / Email</h3>
+                        <div class="flex items-center">
+                            <label for="case-enable" class="text-sm font-medium text-gray-700 mr-2">Enable</label>
+                            <input type="checkbox" id="case-enable" class="channel-toggle h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500" checked>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label for="case-workload" class="block text-sm font-medium text-gray-700">Workload</label>
+                            <input type="number" id="case-workload" value="3" min="1" max="20" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="case-priority" class="block text-sm font-medium text-gray-700">Priority</label>
+                            <input type="number" id="case-priority" value="3" min="1" max="10" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        </div>
+                        <div class="flex items-end pb-1">
+                             <div class="flex items-center">
+                                <input id="case-interruptible" type="checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" checked>
+                                <label for="case-interruptible" class="ml-2 block text-sm text-gray-900">Interruptible</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Panel -->
+            <div class="results-card rounded-lg p-6 lg:sticky lg:top-8 h-full flex flex-col">
+                <h2 class="text-2xl font-bold border-b border-blue-400 pb-2">Simulation Results</h2>
+                
+                <div id="results-content" class="mt-4 flex-grow">
+                    <div id="combinations" class="space-y-4">
+                        <p class="text-lg text-blue-200">Adjust the settings to see what's possible.</p>
+                    </div>
+
+                    <div id="interrupt-explanation" class="mt-6 p-4 bg-white/20 rounded-lg hidden">
+                        <h4 class="font-bold text-lg">Interruptibility Explained</h4>
+                        <p class="text-sm mt-1"></p>
+                    </div>
+                </div>
+
+                <div class="mt-6 text-xs text-blue-300 border-t border-blue-500 pt-3">
+                    <strong>Note:</strong> This is a simplified model. Real-world routing also considers agent skills and availability. Priority 1 is the highest.
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const inputs = document.querySelectorAll('input');
+    const totalCapacitySlider = document.getElementById('totalCapacity');
+    const totalCapacityValue = document.getElementById('totalCapacityValue');
+    const combinationsDiv = document.getElementById('combinations');
+    const interruptDiv = document.getElementById('interrupt-explanation');
+    const interruptText = interruptDiv.querySelector('p');
+
+    function getChannelConfig() {
+        const channels = ['voice', 'chat', 'case'];
+        const config = [];
+        channels.forEach(c => {
+            if (document.getElementById(`${c}-enable`).checked) {
+                config.push({
+                    name: document.querySelector(`#${c}-channel h3`).textContent,
+                    workload: parseInt(document.getElementById(`${c}-workload`).value) || 1,
+                    priority: parseInt(document.getElementById(`${c}-priority`).value) || 10,
+                    interruptible: document.getElementById(`${c}-interruptible`).checked,
+                    id: c
+                });
+            }
+            document.getElementById(`${c}-channel`).classList.toggle('disabled', !document.getElementById(`${c}-enable`).checked);
+        });
+        return config.sort((a, b) => a.priority - b.priority);
+    }
+
+    function updateSimulation() {
+        const totalCapacity = parseInt(totalCapacitySlider.value);
+        totalCapacityValue.textContent = totalCapacity;
+        const channels = getChannelConfig();
+
+        if (channels.length === 0) {
+            combinationsDiv.innerHTML = '<p class="text-lg text-blue-200">Please enable at least one service channel.</p>';
+            interruptDiv.classList.add('hidden');
+            return;
+        }
+
+        let html = '<h3 class="text-xl font-semibold text-white">Your agent could handle:</h3><div class="space-y-2 mt-2">';
+
+        // Individual work types
+        channels.forEach(ch => {
+            const max = Math.floor(totalCapacity / ch.workload);
+            if (max > 0) {
+                html += `<p class="text-lg"><strong class="text-yellow-300 font-bold text-2xl">${max}</strong> ${ch.name}${max > 1 ? 's' : ''}</p>`;
+            }
+        });
+
+        // Simple combinations
+        if (channels.length > 1) {
+            html += '<p class="text-lg mt-3 border-t border-blue-500 pt-3">OR a combination like:</p>';
+            let comboFound = false;
+            for (let i = 0; i < channels.length; i++) {
+                for (let j = i + 1; j < channels.length; j++) {
+                    const ch1 = channels[i];
+                    const ch2 = channels[j];
+                    const maxCh1 = Math.floor((totalCapacity - ch2.workload) / ch1.workload);
+                    if (maxCh1 > 0) {
+                        comboFound = true;
+                        html += `<p class="text-base"><strong class="text-yellow-300">${maxCh1}</strong> ${ch1.name}${maxCh1 > 1 ? 's' : ''} + <strong class="text-yellow-300">1</strong> ${ch2.name}</p>`;
+                    }
+                }
+            }
+            if(!comboFound) {
+                 html += '<p class="text-base text-blue-200">No simple combinations fit the current workload values.</p>';
+            }
+        }
+        
+        html += '</div>';
+        combinationsDiv.innerHTML = html;
+
+        // Interruptibility explanation
+        const uninterruptible = channels.find(ch => !ch.interruptible);
+        const interruptible = channels.find(ch => ch.interruptible);
+
+        if (uninterruptible && interruptible && uninterruptible.priority < interruptible.priority) {
+            interruptDiv.classList.remove('hidden');
+            const maxInterruptible = Math.floor(totalCapacity / interruptible.workload);
+            interruptText.innerHTML = `Even if an agent is at full capacity with <strong class="text-white">${maxInterruptible} ${interruptible.name}(s)</strong>, a high-priority, uninterruptible <strong class="text-white">${uninterruptible.name}</strong> can still be routed to them because the <strong class="text-white">${interruptible.name}</strong> work is configured to be interrupted.`;
+        } else {
+            interruptDiv.classList.add('hidden');
+        }
+    }
+
+    inputs.forEach(input => {
+        input.addEventListener('input', updateSimulation);
+        input.addEventListener('change', updateSimulation);
+    });
+
+    updateSimulation();
+});
+</script>
+
+</body>
+</html>

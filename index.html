@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salesforce Omni-Channel Resource Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .resource-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .resource-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        .card-icon {
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 500;
+        }
+        .btn-primary {
+            background-color: #2563eb;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+
+    <div class="container mx-auto px-4 py-16 sm:px-6 lg:px-8">
+        
+        <header class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">Salesforce Omni-Channel Resource Hub</h1>
+            <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">Your central guide to understanding, configuring, and mastering intelligent work distribution. Select a resource below to begin.</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <!-- Card 1: The Detailed Guide -->
+            <div class="resource-card bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
+                <div class="p-8 flex-grow">
+                    <div class="card-icon mb-6">
+                        <span>&#128214;</span> <!-- Book Icon -->
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900">The Leader's Guide</h2>
+                    <p class="mt-3 text-gray-600">A comprehensive document covering the strategy, concepts, and decision frameworks for a successful Omni-Channel implementation.</p>
+                </div>
+                <div class="bg-gray-50 p-6">
+                    <!-- Link for the detailed text document -->
+                    <a href="./guide.html" class="btn-primary block w-full text-center font-semibold py-3 rounded-lg">
+                        Read the Full Guide
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 2: The Infographic -->
+            <div class="resource-card bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
+                <div class="p-8 flex-grow">
+                     <div class="card-icon mb-6">
+                        <span>&#128202;</span> <!-- Chart Icon -->
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900">The Visual Infographic</h2>
+                    <p class="mt-3 text-gray-600">A one-page visual summary of the key concepts, decision points, and business value of Omni-Channel. Perfect for a quick overview.</p>
+                </div>
+                <div class="bg-gray-50 p-6">
+                     <!-- Link for the infographic document -->
+                    <a href="./infographic.html" class="btn-primary block w-full text-center font-semibold py-3 rounded-lg">
+                        View the Infographic
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 3: The Interactive Simulator -->
+            <div class="resource-card bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
+                <div class="p-8 flex-grow">
+                     <div class="card-icon mb-6">
+                        <span>&#9881;</span> <!-- Gear/Settings Icon -->
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900">The Capacity Simulator</h2>
+                    <p class="mt-3 text-gray-600">An interactive tool to experiment with workload, capacity, and priority settings. See how your choices impact agent workload in real-time.</p>
+                </div>
+                <div class="bg-gray-50 p-6">
+                    <!-- Link for the interactive simulator -->
+                    <a href="./simulator.html" class="btn-primary block w-full text-center font-semibold py-3 rounded-lg">
+                        Launch the Simulator
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <footer class="text-center mt-20 text-gray-500">
+            <p>&copy; 2025 NeuraFlash. All Rights Reserved.</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>

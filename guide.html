@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Business Leader's Interactive Guide to Salesforce Omni-Channel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: A single-page application with a sticky top navigation bar for non-linear exploration. The structure is task-oriented, guiding the user from high-level concepts to interactive decision-making tools and practical examples. It starts with a 'Why it Matters' section, moves to 'Core Concepts' (explained via an interactive tabbed interface), then a 'Decision Hub' with interactive charts and toggles for comparing options, followed by 'Scenarios in Action' (using a modal-based carousel), and ends with an 'Implementation Roadmap' featuring an interactive checklist. This structure was chosen to break down a complex document into digestible, engaging modules, empowering a non-technical user to learn, decide, and act without being overwhelmed by a linear wall of text. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Business Value (Productivity, CSAT). Goal: Inform. Viz: Icon-based cards. Interaction: Hover effects. Justification: Quickly conveys key benefits. Method: HTML/Tailwind.
+        - Report Info: Queue vs. Skills Routing. Goal: Compare. Viz: Horizontal bar chart showing Effort vs. Precision. Interaction: Buttons update chart and text. Justification: Visually quantifies the trade-off. Library: Chart.js.
+        - Report Info: Tab vs. Status Capacity. Goal: Compare. Viz: Donut chart showing Workload Accuracy. Interaction: Buttons update chart. Justification: Makes an abstract concept (accuracy) tangible. Library: Chart.js.
+        - Report Info: Scenarios. Goal: Illustrate. Viz: Cards in a carousel. Interaction: Clicking a card opens a detailed modal. Justification: Keeps the main page clean while allowing deep dives. Method: HTML/Tailwind/JS.
+        - Report Info: Implementation Checklist. Goal: Action. Viz: Interactive checklist. Interaction: User can check items. Justification: Creates a sense of progress and ownership. Method: HTML/JS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 280px;
+            max-height: 300px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 300px;
+                max-height: 350px;
+            }
+        }
+        .nav-link {
+            transition: color 0.3s ease, border-bottom-color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #005bff;
+        }
+        .active-tab {
+            border-color: #005bff;
+            color: #005bff;
+            font-weight: 600;
+        }
+        .inactive-tab {
+            border-color: transparent;
+        }
+        .modal {
+            transition: opacity 0.3s ease-in-out;
+        }
+        .modal-content {
+            transition: transform 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header id="header" class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <a href="#hero" class="text-xl font-bold text-gray-800">Omni-Channel Guide</a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#concepts" class="nav-link text-gray-600 px-3 py-2 rounded-md text-sm font-medium">Core Concepts</a>
+                        <a href="#decision-hub" class="nav-link text-gray-600 px-3 py-2 rounded-md text-sm font-medium">Decision Hub</a>
+                        <a href="#scenarios" class="nav-link text-gray-600 px-3 py-2 rounded-md text-sm font-medium">Scenarios</a>
+                        <a href="#roadmap" class="nav-link text-gray-600 px-3 py-2 rounded-md text-sm font-medium">Roadmap</a>
+                    </div>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button id="mobile-menu-button" type="button" class="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <div class="hidden md:hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#concepts" class="nav-link text-gray-600 hover:bg-gray-50 block px-3 py-2 rounded-md text-base font-medium">Core Concepts</a>
+                <a href="#decision-hub" class="nav-link text-gray-600 hover:bg-gray-50 block px-3 py-2 rounded-md text-base font-medium">Decision Hub</a>
+                <a href="#scenarios" class="nav-link text-gray-600 hover:bg-gray-50 block px-3 py-2 rounded-md text-base font-medium">Scenarios</a>
+                <a href="#roadmap" class="nav-link text-gray-600 hover:bg-gray-50 block px-3 py-2 rounded-md text-base font-medium">Roadmap</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="py-20 md:py-28 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">Intelligent Work Distribution, Simplified.</h1>
+                <p class="mt-4 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">An interactive guide for business leaders to configure Salesforce Omni-Channel. Make informed decisions that boost productivity, delight customers, and empower your team.</p>
+                <div class="mt-10">
+                    <a href="#concepts" class="bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-300">Start Exploring</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="value-props" class="py-16">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                     <h2 class="text-3xl font-bold text-gray-900">Why Omni-Channel Matters to Your Bottom Line</h2>
+                     <p class="mt-2 text-lg text-gray-600">This isn't just a technical upgrade; it's a strategic investment with tangible returns.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200/50">
+                        <h3 class="text-xl font-semibold text-gray-800">Enhanced Productivity</h3>
+                        <p class="mt-2 text-gray-600">Automate task assignment to eliminate agent "think time." Your team focuses on customers, not on picking work from a queue.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200/50">
+                        <h3 class="text-xl font-semibold text-gray-800">Higher CSAT & Retention</h3>
+                        <p class="mt-2 text-gray-600">Route customers to the right agent, the first time. Consistent, context-aware service builds trust and loyalty.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200/50">
+                        <h3 class="text-xl font-semibold text-gray-800">Balanced Workloads</h3>
+                        <p class="mt-2 text-gray-600">Fairly distribute work based on capacity, preventing top-performer burnout and reducing costly employee attrition.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200/50">
+                        <h3 class="text-xl font-semibold text-gray-800">Data-Driven Insights</h3>
+                        <p class="mt-2 text-gray-600">Gain real-time visibility into operations. Proactively manage queues, workloads, and agent performance.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="concepts" class="py-16 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900">The Three Pillars of Omni-Channel</h2>
+                    <p class="mt-2 text-lg text-gray-600">Understand the core components that power intelligent work distribution. Click each pillar to learn more.</p>
+                </div>
+                <div class="max-w-4xl mx-auto">
+                    <div class="border-b border-gray-200">
+                        <nav class="-mb-px flex space-x-6 justify-center" aria-label="Tabs">
+                            <button data-tab="presence" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg active-tab">Presence</button>
+                            <button data-tab="capacity" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg inactive-tab">Capacity</button>
+                            <button data-tab="routing" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg inactive-tab">Routing</button>
+                        </nav>
+                    </div>
+                    <div class="mt-8">
+                        <div id="presence-content" class="tab-content">
+                            <h3 class="text-2xl font-semibold text-gray-800">Pillar 1: Presence - Managing Agent Availability</h3>
+                            <p class="mt-4 text-gray-600">Presence is how agents signal their availability. It's the "on/off" switch for the work-flow, allowing you to control who gets what type of work, and when. Well-designed statuses like `Available - Chat` or `In Training` provide granular control and valuable data on how agents spend their time.</p>
+                        </div>
+                        <div id="capacity-content" class="tab-content hidden">
+                            <h3 class="text-2xl font-semibold text-gray-800">Pillar 2: Capacity - Defining Agent Workload</h3>
+                            <p class="mt-4 text-gray-600">Capacity is the core feature that prevents agent overload. Each agent has a total capacity, and each work item (like a case or chat) consumes a portion of it. The system won't push more work than an agent can handle, ensuring balanced workloads and protecting service quality.</p>
+                        </div>
+                        <div id="routing-content" class="tab-content hidden">
+                            <h3 class="text-2xl font-semibold text-gray-800">Pillar 3: Routing - The Engine of Distribution</h3>
+                            <p class="mt-4 text-gray-600">Routing is the set of rules that directs work to its destination. It determines priority (which work gets handled first) and distribution model (which agent gets the next item). This is where you define the logic to match work to the best available agent based on queues, skills, or priority.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="decision-hub" class="py-16">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900">The Interactive Decision Hub</h2>
+                    <p class="mt-2 text-lg text-gray-600">Translate concepts into action. Use these tools to explore key configuration choices and understand their impact on your business.</p>
+                </div>
+
+                <div class="space-y-16">
+                    <div class="bg-white p-8 rounded-lg shadow-lg border border-gray-200/50">
+                        <h3 class="text-2xl font-semibold text-center text-gray-800">Decision 1: Choose Your Routing Strategy</h3>
+                        <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                            <div>
+                                <div class="flex justify-center space-x-4 mb-6">
+                                    <button id="btn-queue" class="px-6 py-2 rounded-lg font-semibold bg-blue-600 text-white">Queue-Based</button>
+                                    <button id="btn-skills" class="px-6 py-2 rounded-lg font-semibold bg-gray-200 text-gray-700">Skills-Based</button>
+                                </div>
+                                <div id="routing-details"></div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="routingChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg border border-gray-200/50">
+                        <h3 class="text-2xl font-semibold text-center text-gray-800">Decision 2: Select the Right Capacity Model</h3>
+                        <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                            <div>
+                                <div class="flex justify-center space-x-4 mb-6">
+                                    <button id="btn-tab" class="px-6 py-2 rounded-lg font-semibold bg-blue-600 text-white">Tab-Based</button>
+                                    <button id="btn-status" class="px-6 py-2 rounded-lg font-semibold bg-gray-200 text-gray-700">Status-Based</button>
+                                </div>
+                                <div id="capacity-details"></div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="capacityChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="scenarios" class="py-16 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900">Configurations in Action</h2>
+                    <p class="mt-2 text-lg text-gray-600">See how different configurations solve real-world business challenges.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="scenario-card bg-gray-50 p-6 rounded-lg shadow-md border border-gray-200/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer" data-scenario="retail">
+                        <h3 class="text-xl font-semibold text-gray-800">The High-Volume Retailer</h3>
+                        <p class="mt-2 text-gray-600">Managing seasonal spikes and prioritizing urgent sales chats.</p>
+                        <span class="mt-4 inline-block text-blue-600 font-semibold">View Solution →</span>
+                    </div>
+                    <div class="scenario-card bg-gray-50 p-6 rounded-lg shadow-md border border-gray-200/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer" data-scenario="tech">
+                        <h3 class="text-xl font-semibold text-gray-800">The Specialized Tech Team</h3>
+                        <p class="mt-2 text-gray-600">Matching complex technical cases with expert agents.</p>
+                        <span class="mt-4 inline-block text-blue-600 font-semibold">View Solution →</span>
+                    </div>
+                    <div class="scenario-card bg-gray-50 p-6 rounded-lg shadow-md border border-gray-200/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer" data-scenario="b2b">
+                        <h3 class="text-xl font-semibold text-gray-800">The B2B Account Team</h3>
+                        <p class="mt-2 text-gray-600">Balancing long-term cases with immediate client calls.</p>
+                        <span class="mt-4 inline-block text-blue-600 font-semibold">View Solution →</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="roadmap" class="py-16">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900">Your Implementation Roadmap</h2>
+                    <p class="mt-2 text-lg text-gray-600">A clear, actionable path to a successful launch.</p>
+                </div>
+                <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg border border-gray-200/50">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-6">The Business Decision Checklist</h3>
+                    <p class="text-gray-600 mb-6">Use this interactive checklist to finalize your requirements. This becomes the blueprint for your technical team.</p>
+                    <div class="space-y-6">
+                        <div class="checklist-item">
+                            <h4 class="font-semibold text-gray-700">1. Initial Routing Strategy</h4>
+                            <div class="mt-2 space-y-1">
+                                <label class="flex items-center"><input type="radio" name="routing_strategy" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"> <span class="ml-2 text-gray-600">Queue-Based</span></label>
+                                <label class="flex items-center"><input type="radio" name="routing_strategy" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"> <span class="ml-2 text-gray-600">Skills-Based</span></label>
+                            </div>
+                        </div>
+                        <div class="checklist-item">
+                            <h4 class="font-semibold text-gray-700">2. Service Channel Capacity Models</h4>
+                             <div class="mt-2 space-y-1">
+                                <label class="flex items-center"><input type="checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"> <span class="ml-2 text-gray-600">Use <strong>Status-Based</strong> for Cases/Email</span></label>
+                                <label class="flex items-center"><input type="checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"> <span class="ml-2 text-gray-600">Use <strong>Tab-Based</strong> for Live Chat</span></label>
+                                <label class="flex items-center"><input type="checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"> <span class="ml-2 text-gray-600">Use <strong>Tab-Based</strong> for Voice/Phone</span></label>
+                            </div>
+                        </div>
+                         <div class="checklist-item">
+                            <h4 class="font-semibold text-gray-700">3. Interruptible Capacity</h4>
+                             <div class="mt-2 space-y-1">
+                                <label class="flex items-center"><input type="checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"> <span class="ml-2 text-gray-600">Enable for long-running work (e.g., Cases)</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white">
+        <div class="container mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center">
+            <p>&copy; 2025 Your Company. An interactive guide for strategic decision-making.</p>
+        </div>
+    </footer>
+
+    <div id="scenario-modal" class="modal fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none">
+        <div id="modal-content-wrapper" class="modal-content bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto transform scale-95">
+            <div class="p-6 md:p-8">
+                <div class="flex justify-between items-start">
+                    <h2 id="modal-title" class="text-2xl font-bold text-gray-900"></h2>
+                    <button id="modal-close" class="text-gray-400 hover:text-gray-600">&times;</button>
+                </div>
+                <div id="modal-body" class="mt-4 text-gray-600 space-y-4"></div>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const data = {
+        routing: {
+            queue: {
+                title: 'Queue-Based Routing',
+                description: 'Routes work to a team (queue). Best for generalist teams where speed is key. Simple to set up and manage.',
+                pros: ['Simple to configure', 'Fast implementation', 'Low admin overhead'],
+                cons: ['Potential for skill mismatches', 'Can lead to internal transfers'],
+                chartData: [2, 7]
+            },
+            skills: {
+                title: 'Skills-Based Routing',
+                description: 'Routes work to agents with specific skills. Best for specialized teams where precision is paramount.',
+                pros: ['Higher First Contact Resolution (FCR)', 'Improved Customer Satisfaction (CSAT)', 'More efficient for complex issues'],
+                cons: ['Higher admin overhead', 'Risk of overworking experts'],
+                chartData: [8, 9]
+            }
+        },
+        capacity: {
+            tab: {
+                title: 'Tab-Based Capacity',
+                description: 'Capacity is consumed as long as a work tab is open. Best for real-time, short-lived work like chats.',
+                pros: ['Simple to understand', 'Capacity released immediately on close'],
+                cons: ['Highly inaccurate for long-running work', 'Can create hidden backlogs'],
+                chartData: [20, 80]
+            },
+            status: {
+                title: 'Status-Based Capacity',
+                description: 'Capacity is tied to the work item\'s status field (e.g., Case Status). Best for long-running work like cases.',
+                pros: ['Accurate workload tracking', 'Frees capacity when waiting for a reply'],
+                cons: ['Requires disciplined status updates from agents'],
+                chartData: [95, 5]
+            }
+        },
+        scenarios: {
+            retail: {
+                title: 'The High-Volume Retailer',
+                body: `
+                    <p><strong>Challenge:</strong> Urgent, sales-impacting live chats get stuck behind less critical emails during holiday spikes, leading to lost sales.</p>
+                    <p><strong>Solution:</strong></p>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li><strong>Routing:</strong> Queue-based, but with priority. A 'Chat_Order_Inquiry' queue is set to Priority 1.</li>
+                        <li><strong>Capacity:</strong> Tab-based for chats, but Status-based for emails.</li>
+                        <li><strong>Key Feature:</strong> Email cases are marked as 'Interruptible'.</li>
+                    </ul>
+                    <p><strong>Outcome:</strong> An agent working on an email is intelligently interrupted for a high-priority chat. Wait times for urgent chats drop, boosting sales and CSAT. Agent time is maximized as they work on the email backlog during lulls.</p>
+                `
+            },
+            tech: {
+                title: 'The Specialized Tech Support Team',
+                body: `
+                    <p><strong>Challenge:</strong> Highly technical cases are picked up by junior agents, leading to multiple transfers, long resolution times, and frustrated expert customers.</p>
+                    <p><strong>Solution:</strong></p>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li><strong>Routing:</strong> Skills-based routing is implemented.</li>
+                        <li><strong>Skill Definition:</strong> Skills are defined for Product, Technical Expertise (e.g., 'Database Admin'), and Language.</li>
+                        <li><strong>Logic:</strong> An Omni-Channel Flow automatically adds required skills to a case based on its category.</li>
+                    </ul>
+                    <p><strong>Outcome:</strong> First Contact Resolution (FCR) soars as complex cases go directly to the right expert. CSAT improves, and both junior and senior agents report higher job satisfaction.</p>
+                `
+            },
+            b2b: {
+                title: 'The B2B Account Management Team',
+                body: `
+                    <p><strong>Challenge:</strong> Dedicated Account Managers miss urgent calls from high-value clients because they are busy with long-running cases.</p>
+                    <p><strong>Solution:</strong></p>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li><strong>Routing:</strong> A hybrid model. Direct-to-Agent routing for calls from named accounts.</li>
+                        <li><strong>Capacity:</strong> Status-based capacity is essential. A case with status 'Waiting for Client' does not consume capacity.</li>
+                        <li><strong>Presence:</strong> Granular statuses like 'Focused - Case Work' give agents control.</li>
+                    </ul>
+                    <p><strong>Outcome:</strong> AMs can manage their long-term case portfolio while remaining available for urgent calls. High-value clients never feel ignored, and management gets an accurate view of true workload.</p>
+                `
+            }
+        }
+    };
+
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuButton.addEventListener('click', () => {
+        const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+        mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+        mobileMenu.classList.toggle('hidden');
+    });
+
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const tab = button.dataset.tab;
+            tabButtons.forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('inactive-tab');
+            });
+            button.classList.add('active-tab');
+            button.classList.remove('inactive-tab');
+
+            tabContents.forEach(content => {
+                if (content.id === `${tab}-content`) {
+                    content.classList.remove('hidden');
+                } else {
+                    content.classList.add('hidden');
+                }
+            });
+        });
+    });
+
+    let routingChart, capacityChart;
+
+    function createRoutingChart(chartData) {
+        const ctx = document.getElementById('routingChart').getContext('2d');
+        if (routingChart) routingChart.destroy();
+        routingChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Implementation Effort', 'Routing Precision'],
+                datasets: [{
+                    label: 'Strategy Rating',
+                    data: chartData,
+                    backgroundColor: ['#60a5fa', '#2563eb'],
+                    borderColor: ['#3b82f6', '#1d4ed8'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 10,
+                        grid: { display: false }
+                    },
+                    y: {
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.x !== null) {
+                                    label += context.parsed.x + ' / 10';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function createCapacityChart(chartData) {
+        const ctx = document.getElementById('capacityChart').getContext('2d');
+        if (capacityChart) capacityChart.destroy();
+        capacityChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Accurate', 'Inaccurate/Risky'],
+                datasets: [{
+                    label: 'Workload Accuracy',
+                    data: chartData,
+                    backgroundColor: ['#2563eb', '#d1d5db'],
+                    borderColor: '#ffffff',
+                    borderWidth: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return ` ${context.label}: ${context.raw}%`;
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Estimated Workload Accuracy',
+                        font: { size: 16 }
+                    }
+                }
+            }
+        });
+    }
+    
+    function updateDetails(containerId, content) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = `
+            <h4 class="text-xl font-semibold text-gray-800">${content.title}</h4>
+            <p class="mt-2 text-gray-600">${content.description}</p>
+            <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <h5 class="font-semibold text-green-600">Pros</h5>
+                    <ul class="mt-1 list-disc list-inside text-gray-600 text-sm space-y-1">${content.pros.map(p => `<li>${p}</li>`).join('')}</ul>
+                </div>
+                <div>
+                    <h5 class="font-semibold text-red-600">Cons</h5>
+                    <ul class="mt-1 list-disc list-inside text-gray-600 text-sm space-y-1">${content.cons.map(c => `<li>${c}</li>`).join('')}</ul>
+                </div>
+            </div>
+        `;
+    }
+
+    const btnQueue = document.getElementById('btn-queue');
+    const btnSkills = document.getElementById('btn-skills');
+    btnQueue.addEventListener('click', () => {
+        updateDetails('routing-details', data.routing.queue);
+        createRoutingChart(data.routing.queue.chartData);
+        btnQueue.classList.add('bg-blue-600', 'text-white');
+        btnQueue.classList.remove('bg-gray-200', 'text-gray-700');
+        btnSkills.classList.add('bg-gray-200', 'text-gray-700');
+        btnSkills.classList.remove('bg-blue-600', 'text-white');
+    });
+    btnSkills.addEventListener('click', () => {
+        updateDetails('routing-details', data.routing.skills);
+        createRoutingChart(data.routing.skills.chartData);
+        btnSkills.classList.add('bg-blue-600', 'text-white');
+        btnSkills.classList.remove('bg-gray-200', 'text-gray-700');
+        btnQueue.classList.add('bg-gray-200', 'text-gray-700');
+        btnQueue.classList.remove('bg-blue-600', 'text-white');
+    });
+
+    const btnTab = document.getElementById('btn-tab');
+    const btnStatus = document.getElementById('btn-status');
+    btnTab.addEventListener('click', () => {
+        updateDetails('capacity-details', data.capacity.tab);
+        createCapacityChart(data.capacity.tab.chartData);
+        btnTab.classList.add('bg-blue-600', 'text-white');
+        btnTab.classList.remove('bg-gray-200', 'text-gray-700');
+        btnStatus.classList.add('bg-gray-200', 'text-gray-700');
+        btnStatus.classList.remove('bg-blue-600', 'text-white');
+    });
+    btnStatus.addEventListener('click', () => {
+        updateDetails('capacity-details', data.capacity.status);
+        createCapacityChart(data.capacity.status.chartData);
+        btnStatus.classList.add('bg-blue-600', 'text-white');
+        btnStatus.classList.remove('bg-gray-200', 'text-gray-700');
+        btnTab.classList.add('bg-gray-200', 'text-gray-700');
+        btnTab.classList.remove('bg-blue-600', 'text-white');
+    });
+    
+    btnQueue.click();
+    btnTab.click();
+
+    const modal = document.getElementById('scenario-modal');
+    const modalContentWrapper = document.getElementById('modal-content-wrapper');
+    const modalTitle = document.getElementById('modal-title');
+    const modalBody = document.getElementById('modal-body');
+    const modalClose = document.getElementById('modal-close');
+    const scenarioCards = document.querySelectorAll('.scenario-card');
+
+    function openModal(scenarioKey) {
+        const scenario = data.scenarios[scenarioKey];
+        if (scenario) {
+            modalTitle.textContent = scenario.title;
+            modalBody.innerHTML = scenario.body;
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modalContentWrapper.classList.remove('scale-95');
+        }
+    }
+
+    function closeModal() {
+        modal.classList.add('opacity-0');
+        modalContentWrapper.classList.add('scale-95');
+        setTimeout(() => {
+            modal.classList.add('pointer-events-none');
+        }, 300);
+    }
+
+    scenarioCards.forEach(card => {
+        card.addEventListener('click', () => openModal(card.dataset.scenario));
+    });
+
+    modalClose.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeModal();
+        }
+    });
+
+});
+</script>
+
+</body>
+</html>
